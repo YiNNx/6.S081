@@ -43,7 +43,7 @@ sys_sbrk(void)
 
   argint(0, &n);
   addr = myproc()->sz;
-  if(growproc(n) < 0)
+  if (growproc(n) < 0)
     return -1;
   return addr;
 }
@@ -54,11 +54,11 @@ sys_sleep(void)
   int n;
   uint ticks0;
 
-  argint(0, &n);
+  argint(0, &n);   // Fetch the 0th 32-bit system call argument.
   acquire(&tickslock);
   ticks0 = ticks;
-  while(ticks - ticks0 < n){
-    if(killed(myproc())){
+  while (ticks - ticks0 < n) {
+    if (killed(myproc())) {
       release(&tickslock);
       return -1;
     }

@@ -149,7 +149,8 @@ main(void)
   int fd;
 
   // Ensure that three file descriptors are open.
-  while((fd = open("console", O_RDWR)) >= 0){
+  // TODO: WHAT'S THE INTERNAL IMPLEMENT OF SYSTEM CALL??
+  while ((fd = open("console", O_RDWR)) >= 0) {
     if(fd >= 3){
       close(fd);
       break;
@@ -165,7 +166,7 @@ main(void)
         fprintf(2, "cannot cd %s\n", buf+3);
       continue;
     }
-    if(fork1() == 0)
+    if(fork1() == 0)         
       runcmd(parsecmd(buf));
     wait(0);
   }
