@@ -149,7 +149,6 @@ main(void)
   int fd;
 
   // Ensure that three file descriptors are open.
-  // TODO: WHAT'S THE INTERNAL IMPLEMENT OF SYSTEM CALL??
   while ((fd = open("console", O_RDWR)) >= 0) {
     if(fd >= 3){
       close(fd);
