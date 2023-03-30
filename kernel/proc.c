@@ -124,6 +124,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->trace = 0;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -307,6 +308,8 @@ fork(void)
     if(p->ofile[i])
       np->ofile[i] = filedup(p->ofile[i]);
   np->cwd = idup(p->cwd);
+
+  np->trace = p->trace;
 
   safestrcpy(np->name, p->name, sizeof(p->name));
 
@@ -680,4 +683,11 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+void trace(int umask)
+{
+  struct proc *p = myproc();
+  p->trace = umask;
+  // release(&p->lock);
 }
