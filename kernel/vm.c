@@ -8,6 +8,7 @@
 
 /*
  * the kernel's page table.
+ * a pointer returned by kalloc
  */
 pagetable_t kernel_pagetable;
 
