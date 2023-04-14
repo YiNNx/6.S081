@@ -8,7 +8,7 @@ void ugetpid_test();
 void pgaccess_test();
 
 int
-main(int argc, char *argv[])
+main(int argc, char* argv[])
 {
   ugetpid_test();
   pgaccess_test();
@@ -16,10 +16,10 @@ main(int argc, char *argv[])
   exit(0);
 }
 
-char *testname = "???";
+char* testname = "???";
 
 void
-err(char *why)
+err(char* why)
 {
   printf("pgtbltest: %s failed: %s, pid=%d\n", testname, why, getpid());
   exit(1);
@@ -51,7 +51,7 @@ ugetpid_test()
 void
 pgaccess_test()
 {
-  char *buf;
+  char* buf;
   unsigned int abits;
   printf("pgaccess_test starting\n");
   testname = "pgaccess_test";
@@ -63,8 +63,10 @@ pgaccess_test()
   buf[PGSIZE * 30] += 1;
   if (pgaccess(buf, 32, &abits) < 0)
     err("pgaccess failed");
-  if (abits != ((1 << 1) | (1 << 2) | (1 << 30)))
+  if (abits != ((1 << 1) | (1 << 2) | (1 << 30))) {
+    printf("expected %p, get %p\n", ((1 << 1) | (1 << 2) | (1 << 30)), abits);
     err("incorrect access bits set");
+  }
   free(buf);
   printf("pgaccess_test: OK\n");
 }

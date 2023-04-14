@@ -43,7 +43,7 @@ sys_sbrk(void)
 
   argint(0, &n);
   addr = myproc()->sz;
-  if(growproc(n) < 0)
+  if (growproc(n) < 0)
     return -1;
   return addr;
 }
@@ -58,8 +58,8 @@ sys_sleep(void)
   argint(0, &n);
   acquire(&tickslock);
   ticks0 = ticks;
-  while(ticks - ticks0 < n){
-    if(killed(myproc())){
+  while (ticks - ticks0 < n) {
+    if (killed(myproc())) {
       release(&tickslock);
       return -1;
     }
@@ -70,14 +70,32 @@ sys_sleep(void)
 }
 
 
-#ifdef LAB_PGTBL
 int
 sys_pgaccess(void)
 {
-  // lab pgtbl: your code here.
+  uint64 buf;
+  argaddr(0, &buf);
+  int len;
+  argint(1, &len);
+  uint64 bm_address;
+  argaddr(2, &bm_address);
+
+  uint64 bitmask = 0;
+
+  if (len > 64) panic("sys_pgaccess - len <= 64");
+l
+  struct proc* p = myproc();
+
+  for (int i = 0;i < len;i++) {
+    pte_t* pte = walk(p->pagetable, buf + i * PGSIZE, 0);
+    bitmask = bitmask | ((((*pte) & PTE_A) >> 6) << i);
+    *pte = (*pte) & (~PTE_A);
+  }
+
+  copyout(p->pagetable, bm_address, (char*)&bitmask, sizeof(bitmask));
+
   return 0;
 }
-#endif
 
 uint64
 sys_kill(void)

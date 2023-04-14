@@ -344,6 +344,10 @@ typedef uint64 *pagetable_t; // 512 PTEs
 #define PTE_X (1L << 3)
 #define PTE_U (1L << 4) // user can access
 
+// The A bit indicates the virtual page has
+// been read, written, or fetched from since the last time the A bit was cleared.
+#define PTE_A (1L << 6) 
+
 // shift a physical address to the right place for a PTE.
 #define PA2PTE(pa) ((((uint64)pa) >> 12) << 10)
 

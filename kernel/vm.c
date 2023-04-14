@@ -444,21 +444,19 @@ copyinstr(pagetable_t pagetable, char* dst, uint64 srcva, uint64 max)
 }
 
 void vmprint(pagetable_t pagetable, int prefix) {
-  if(!prefix) printf("page table %p\n", pagetable);
+  if (!prefix) printf("page table %p\n", pagetable);
   for (int i = 0; i < 512; i++) {
     pte_t pte = pagetable[i];
-    if ((pte & PTE_V) && (pte & (PTE_R | PTE_W | PTE_X)) == 0) {
+    if ((pte & PTE_V)) {
       // this PTE points to a lower-level page table.
       uint64 child = PTE2PA(pte);
       printf("..");
       for (int j = 0;j < prefix;j++) {
         printf(" ..");
       }
-      printf("%d: pte %p pa %p\n", i, pte, &pte);
-      vmprint((pagetable_t)child, prefix + 1);
+      printf("%d: pte %p pa %p\n", i, pte, child);
+      if ((pte & (PTE_R | PTE_W | PTE_X)) == 0)
+        vmprint((pagetable_t)child, prefix + 1);
     }
-    // else if (pte & PTE_V) {
-    //   panic("freewalk: leaf");
-    // }
   }
 }
